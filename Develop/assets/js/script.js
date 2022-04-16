@@ -94,3 +94,57 @@ var myCalendar = [
 
     },
 ]
+
+// function to display current date for calendar
+function getDate() {
+    var thisDate = moment().format('dddd, Do MMMM');
+    $("#thisDay").text(thisDate);
+}
+
+// create scheduling section
+myCalendar.forEach(function (currentHour) {
+    var timeBlock = $("<form>").attr({
+        "class": "row"
+    });
+    $(".container").append(timeBlock);
+
+    // create boxes for time slot
+    var timeBox = $("<div>")
+        .text(`${currentHour.hour}${currentHour.meridiem}`)
+        .attr({
+            "class": "col-md-2 hour"
+        });
+
+    // creates reminders and tasks section
+    var planReminder = $("<div>")
+        .attr({
+            "class": "col-md-0 reminder p-0"
+        });
+    var reminderData = $("<text area>");
+    planReminder.append(reminderData);
+    reminderData.attr("id", currentHour.id);
+    // set formating for time past, present, and furute
+    if (currentHour.time < moment().format("HH")) {
+        reminderData.attr({
+            "class": "past",
+        })
+    } else if (currentHour.time === moment().format("HH")) {
+        reminderData.attr({
+            "class": "present"
+        })
+    } else if (currentHour.time > moment().format("HH")) {
+        reminderData.attr({
+            "class": "future"
+        })
+    }
+    // create save button
+    var saveButton = $("<i class= 'far fa-save fa-lg'></i>")
+    var saveReminder = $("<button")
+      .attr({
+          "class": "col-md-1 saveBtn"
+      });
+    saveReminder.append(saveButton);
+    timeBlock.appen(timeBox, planReminder, saveReminder);
+})
+
+init();
