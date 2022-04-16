@@ -101,6 +101,32 @@ function getDate() {
     $("#thisDay").text(thisDate);
 }
 
+// function to save daily reminders to local storage
+function saveReminders() {
+    localStorage.setItem("myCalendar", JSON.stringify(myCalendar));
+}
+
+//function to view reminders saved in local storage
+function displayReminders() {
+    myCalendar.forEach(function (thisHour) {
+        $('#${thisHour.id}').val(thisHour.reminder);
+    })
+}
+
+//function to view any existing local storage data
+function disply() {
+    var storedDay = JSON.parse(localStorage.getItem("myCalendar"));
+
+    //create function to display stored data if currentDate = storedDay
+    if(storedDay) {
+        myCalendar = storedDay;
+    } else{}
+
+    saveReminders();
+    displayReminders();
+}
+getDate();
+
 // create scheduling section
 myCalendar.forEach(function (currentHour) {
     var timeBlock = $("<form>").attr({
@@ -145,6 +171,16 @@ myCalendar.forEach(function (currentHour) {
       });
     saveReminder.append(saveButton);
     timeBlock.appen(timeBox, planReminder, saveReminder);
+    
 })
 
-init();
+
+// save reminder data to be used in localStorage, create an event listener for save button
+$(".saveBtn").on("click", function(event) {
+    event.preventDefault();
+    var saveData = $(this).siblings(".reminder").children(".future").attr("id");
+    myDay[saveData].reminder = $(this).siblings(".reminder").children(".future").val();
+    console.log(saveData);
+    saveReminders();
+    displayReminders();
+});
